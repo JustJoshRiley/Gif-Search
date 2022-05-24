@@ -16,6 +16,8 @@ const app = express();
 // Middleware
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+// Styles
+app.use(express.static('public'));
 
 // Routes
 app.get('/', (req, res) => {
