@@ -1,19 +1,35 @@
 // Libraries
 const express = require('express');
+const exphbs  = require('express-handlebars');
 
+// Require tenorjs
+const Tenor = require("tenorjs").client({
+  // Replace with your own key
+    "Key": "NUR68V0TQXCX",
+    "Filter": "high", // "off", "low", "medium", "high", not case sensitive
+    "Locale": "en_US", // Your locale here, case-sensitivity depends on input
+});
 
 // App-Setup
 const app = express();
 
 // Middleware
-const exphbs  = require('express-handlebars');
 app.engine('handlebars', exphbs.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
 // Routes
 app.get('/', (req, res) => {
-    console.log(req.query) // => "{ term: hey" }[/bold]
-    res.render('home')
+    term = ""
+    if (req.query.term) {
+        term = req.query.term
+    }
+    // Tenor.search.Query("SEARCH KEYWORD HERE", "LIMIT HERE")
+    Tenor.Search.Query(term, "10")
+    .then(response => {
+    const gifs = response;
+    res.render('home', { gifs })
+    })
+    .catch(console.error);
 })
 
 app.get('/', (req, res) => {
